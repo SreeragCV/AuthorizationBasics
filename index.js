@@ -26,6 +26,13 @@ app.use(session({
 
 app.use(express.urlencoded({ extended: true }));
 
+const requireLogin = (req, res, next) => {
+    if(!req.session.user_id){
+        return res.redirect('/login')
+    }
+    next();
+}
+
 app.get('/', (req, res) => {
     res.send('THIS IS HOME PAGE!!!!')
 })
@@ -68,11 +75,12 @@ app.post('/logout', async(req, res) => {
     res.redirect('/login');
 })
 
-app.get('/secrets', (req, res) => {
-    if(!req.session.user_id){
-    return res.redirect('/login');
-    }
+app.get('/secrets', requireLogin, (req, res) => {
     res.render('secret');
+})
+
+app.get('/topsecret', requireLogin, (req, res) => {
+    res.send('THIS IS TOP SECRET!!!');
 })
 
 app.listen(3000, () => {
