@@ -63,11 +63,16 @@ app.post('/login', async (req, res) => {
     }
 })
 
+app.post('/logout', async(req, res) => {
+    req.session.user_id = null;
+    res.redirect('/login');
+})
+
 app.get('/secrets', (req, res) => {
     if(!req.session.user_id){
-        res.redirect('/login');
+    return res.redirect('/login');
     }
-    res.send('YOU ARE LOGGED IN NOW YOU CAN SEE THIS SECRET!!!')
+    res.render('secret');
 })
 
 app.listen(3000, () => {
